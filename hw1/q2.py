@@ -41,7 +41,61 @@ def closeness_centrality(G):
 
 
 def create_graph(n=15, p=0.5):
-    return
+    G = nx.Graph()
+    my_nodes = list(x for x in range(0, n))
+    for n1 in my_nodes:
+        G.add_node(n1)
+        for n2 in my_nodes:
+            if n1 > n2:
+                rand = random.uniform(0, 1)
+                if rand <= p:
+                    G.add_edge(n1, n2)
+    return G
+
+def get_top_5_nodes():
+    result = dict()
+    G = create_graph()
+
+    Cd_dict = degree_centrality(G)
+    Cd_list = [(k, v) for k, v in Cd_dict.items()]
+    Cd_list.sort(key=lambda x: x[1])
+    Cd_top_5 = Cd_list[-5:]
+    result["degree"] = Cd_top_5
+
+    Cb_dict = betweenness_centrality(G)
+    Cb_list = [(k, v) for k, v in Cb_dict.items()]
+    Cb_list.sort(key=lambda x: x[1])
+    Cb_top_5 = Cb_list[-5:]
+    result["betweenness"] = Cb_top_5
+
+    Cc_dict = closeness_centrality(G)
+    Cc_list = [(k, v) for k, v in Cc_dict.items()]
+    Cc_list.sort(key=lambda x: x[1])
+    Cc_top_5 = Cc_list[-5:]
+    result["closeness"] = Cc_top_5
+
+    return result
+
+
+def visualize_network():
+    G = create_graph(p=0.2)
+
+    Cd_dict = degree_centrality(G)
+    Cd_cetralities = list(Cd_dict.values())
+    plt.figure(1, figsize=(10, 10))
+    nx.draw(G, with_labels=True, node_size=[val*9000 for val in Cd_cetralities], node_color="skyblue", font_size=30)
+
+    Cb_dict = betweenness_centrality(G)
+    Cb_cetralities = list(Cb_dict.values())
+    plt.figure(2, figsize=(10, 10))
+    nx.draw(G, with_labels=True, node_size=[val * 9000 for val in Cb_cetralities], node_color="skyblue", font_size=30)
+
+    Cc_dict = closeness_centrality(G)
+    Cc_cetralities = list(Cc_dict.values())
+    plt.figure(3, figsize=(10, 10))
+    nx.draw(G, with_labels=True, node_size=[val * 9000 for val in Cc_cetralities], node_color="skyblue", font_size=30)
+
+    plt.show()
 
 
 def test_cetralities():
